@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocean.platformspringboot.mapper.UserMapper">
+    <resultMap id="UserResultMap" type="User">
+        <id property="id" column="user_id"/>
+        <result property="name" column="user_name"/>
+        <result property="gen" column="user_gen"/>
+        <result property="pwd" column="user_pwd"/>
+        <result property="phone" column="user_phone"/>
+        <result property="addr" column="user_addr"/>
+        <result property="num" column="user_num"/>
+        <result property="point" column="user_point"/>
+        <result property="level" column="user_level"/>
+    </resultMap>
+    <select id="queryUserList" resultMap="UserResultMap">
+        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level from user where logoff_status = 0
+    </select>
+
+    <select id="queryUserByID" resultMap="UserResultMap">
+        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level from user where user_id=#{id} and logoff_status = 0
+    </select>
+
+    <insert id="addUser">
+        insert into user(user_name,user_gen,user_pwd,user_phone,user_addr,user_num) values(#{name},#{gen},#{pwd},#{phone},#{addr},#{num})
+    </insert>
+
+    <update id="updateUser">
+        update user
+        <set>
+            <if test="name != null">
+                user_name=#{name},
+            </if>
+            <if test="gen != null">
+                user_gen=#{gen},
+            </if>
+            <if test="phone != null">
+                user_phone=#{phone},
+            </if>
+            <if test="addr != null">
+                user_addr=#{addr},
+            </if>
+            <if test="num != null">
+                user_num=#{num},
+            </if>
+        </set>
+        <where>
+            user_id=#{id}
+        </where>
+    </update>
+
+    <update id="delUserByID">
+        update user set  logoff_status = 1 where user_id=#{id}
+    </update>
+    
+    <select id="selectPage" resultMap="UserResultMap">
+        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level from user where logoff_status = 0 limit #{pageNum} ,#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select count(user_id) from user where logoff_status = 0
+    </select>
+
+    <select id="selectPageByName" resultMap="UserResultMap">
+        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level from user where logoff_status = 0 and user_name like concat('%',#{name},'%') limit #{pageNum} ,#{pageSize}
+    </select>
+
+    <select id="selectTotalByName" resultType="java.lang.Integer">
+        select count(user_id) from user  where logoff_status = 0 and user_name like concat('%',#{name},'%')
+    </select>
+
+
+</mapper>
+

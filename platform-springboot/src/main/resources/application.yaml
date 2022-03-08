@@ -1,0 +1,14 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/campus_platform?serverTimezone=GMT%2B8
+    # 数据库用户名
+    username: root
+    # 数据库密码
+    password: gjw523624
+    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  type-aliases-package: com.ocean.platformspringboot.pojo
+  mapper-locations: classpath:mapper/*.xml
+
