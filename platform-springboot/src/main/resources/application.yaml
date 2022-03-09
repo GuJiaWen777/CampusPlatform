@@ -12,3 +12,4 @@ mybatis:
   type-aliases-package: com.ocean.platformspringboot.pojo
   mapper-locations: classpath:mapper/*.xml
 
+
