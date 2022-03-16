@@ -1,4 +1,4 @@
-package com.ocean.platformspringboot.pojo;
+package com.ocean.platformspringboot.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -20,10 +20,12 @@ public class User {
     private String num;//学号
     private Integer point = 0;//积分
     private Integer level = 0;//等级
+    private Integer credit = 100;//信用值（上限100，优秀80~100，良好60~80，<60拉黑）
     private Integer logoff_status = 0;//注销标志（0正常 1注销）
     private Integer block_status = 0;//角色状态（0正常 1拉黑）
 
-    public User(Integer id, String name, Integer gen, String pwd, String phone, String addr, String num, Integer point, Integer level) {
+
+    public User(Integer id, String name, Integer gen, String pwd, String phone, String addr, String num, Integer point, Integer level, Integer credit) {
         this.id = id;
         this.name = name;
         this.gen = gen;
@@ -33,6 +35,7 @@ public class User {
         this.num = num;
         this.point = point;
         this.level = level;
+        this.credit = credit;
     }
 
     public User(String name, Integer gen, String pwd, String phone, String addr, String num) {

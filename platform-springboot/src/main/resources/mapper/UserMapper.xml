@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ocean.platformspringboot.mapper.UserMapper">
-    <resultMap id="UserResultMap" type="User">
+    <resultMap id="UserMap" type="User">
         <id property="id" column="user_id"/>
         <result property="name" column="user_name"/>
         <result property="gen" column="user_gen"/>
@@ -13,13 +13,18 @@
         <result property="num" column="user_num"/>
         <result property="point" column="user_point"/>
         <result property="level" column="user_level"/>
+        <result property="credit" column="user_credit"/>
     </resultMap>
-    <select id="queryUserList" resultMap="UserResultMap">
-        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level from user where logoff_status = 0
+    <select id="queryUserList" resultMap="UserMap">
+        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level,user_credit from user where logoff_status = 0
     </select>
 
-    <select id="queryUserByID" resultMap="UserResultMap">
-        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level from user where user_id=#{id} and logoff_status = 0
+    <select id="queryUserByID" resultMap="UserMap">
+        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level,user_credit  from user where logoff_status = 0 and user_id=#{id}
+    </select>
+
+    <select id="queryUserByName" resultMap="UserMap">
+        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level,user_credit  from user where logoff_status = 0 and user_name=#{name}
     </select>
 
     <insert id="addUser">
@@ -51,23 +56,39 @@
     </update>
 
     <update id="delUserByID">
-        update user set  logoff_status = 1 where user_id=#{id}
+        update user set  logoff_status = 1 where user_id = #{id}
     </update>
-    
-    <select id="selectPage" resultMap="UserResultMap">
-        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level from user where logoff_status = 0 limit #{pageNum} ,#{pageSize}
+    <update id="updateUserPoint">
+        update user set user_point = #{point} where user_id = #{id}
+    </update>
+
+    <select id="selectPage" resultMap="UserMap">
+        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level,user_credit  from user where logoff_status = 0 limit #{pageNum} ,#{pageSize}
     </select>
 
     <select id="selectTotal" resultType="java.lang.Integer">
         select count(user_id) from user where logoff_status = 0
     </select>
 
-    <select id="selectPageByName" resultMap="UserResultMap">
-        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level from user where logoff_status = 0 and user_name like concat('%',#{name},'%') limit #{pageNum} ,#{pageSize}
+    <select id="selectPageByName" resultMap="UserMap">
+        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level,user_credit  from user where logoff_status = 0 and user_name like concat('%',#{name},'%') limit #{pageNum} ,#{pageSize}
     </select>
 
     <select id="selectTotalByName" resultType="java.lang.Integer">
         select count(user_id) from user  where logoff_status = 0 and user_name like concat('%',#{name},'%')
+    </select>
+
+    <resultMap id="UserDTOMap" type="UserDTO">
+        <result property="id" column="user_id"/>
+        <result property="name" column="user_name"/>
+        <result property="gen" column="user_gen"/>
+        <result property="pwd" column="user_pwd"/>
+        <result property="phone" column="user_phone"/>
+        <result property="addr" column="user_addr"/>
+        <result property="num" column="user_num"/>
+    </resultMap>
+    <select id="loginByName" resultMap="UserDTOMap">
+        select user_name,user_pwd,user_id from user where logoff_status = 0 and user_name = #{name} and user_pwd = #{pwd}
     </select>
 
 
