@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocean.platformspringboot.mapper.ReviewMapper">
+
+    <select id="selectByInfo" resultType="com.ocean.platformspringboot.entity.Review">
+        select review.* ,user.user_name as userName ,user.avatar as avatar from review
+        left join user on review.user_id = user.user_id
+        where info_id = #{infoId} and delete_status = 0
+    </select>
+    <select id="findpage" resultType="com.ocean.platformspringboot.entity.Review">
+        select review.* , user.user_name as userName ,school_info.info_title as infoTitle from review
+        left join user
+        on review.user_id = user.user_id
+        left join school_info
+        on review.info_id = school_info.info_id
+        <where>
+            <if test="reviewDescription != null and reviewDescription != '' ">
+                and task_title like concat('%' , #{reviewDescription} , '%')
+            </if>
+        </where>
+        order by review.review_id desc
+    </select>
+</mapper>

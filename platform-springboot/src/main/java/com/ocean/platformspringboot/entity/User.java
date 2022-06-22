@@ -1,9 +1,12 @@
 package com.ocean.platformspringboot.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -23,6 +26,11 @@ public class User {
     private Integer credit = 100;//信用值（上限100，优秀80~100，良好60~80，<60拉黑）
     private Integer logoff_status = 0;//注销标志（0正常 1注销）
     private Integer block_status = 0;//角色状态（0正常 1拉黑）
+    private String avatar;//头像
+    private Date createdTime;
+
+    @TableField(exist = false)
+    private Integer roleId;//角色ID
 
 
     public User(Integer id, String name, Integer gen, String pwd, String phone, String addr, String num, Integer point, Integer level, Integer credit) {

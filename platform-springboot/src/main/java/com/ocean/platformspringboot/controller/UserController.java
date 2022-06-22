@@ -5,7 +5,9 @@ import com.ocean.platformspringboot.common.Constants;
 import com.ocean.platformspringboot.common.Result;
 import com.ocean.platformspringboot.entity.dto.UserDTO;
 import com.ocean.platformspringboot.entity.User;
+import com.ocean.platformspringboot.entity.dto.UserPasswordDTO;
 import com.ocean.platformspringboot.service.impl.UserServiceImpl;
+import com.ocean.platformspringboot.utils.TokenUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -22,7 +24,6 @@ public class UserController {
     //新增和修改用户
     @PostMapping
     public Result saveUser(@RequestBody User user){
-        System.out.println("saveUser:"+user);
         return Result.success(userServiceImpl.saveUser(user));
     }
 
@@ -50,12 +51,21 @@ public class UserController {
         User registerUser = userServiceImpl.register(userDTO);
         return Result.success(registerUser);
     }
+    @PostMapping("/password")
+    public Result password(@RequestBody UserPasswordDTO userPasswordDTO) {
+        userServiceImpl.updatePassword(userPasswordDTO);
+        return Result.success();
+    }
 
     //查询所有用户数据
     @GetMapping
     public Result getUserAll(){
         List<User> users = userServiceImpl.getAll();
         return Result.success(users);
+    }
+    @GetMapping("/status/{id}")
+    public Result getUserByID(@PathVariable("id") Integer userId){
+        return Result.success( userServiceImpl.getUserStatusById(userId));
     }
 
     //
@@ -79,6 +89,7 @@ public class UserController {
                                     @RequestParam Integer pageSize,
                                     @RequestParam String username){
         Map<String,Object> res = userServiceImpl.findUserByPageByName(pageNum,pageSize,username);
+    //  User currentUser = TokenUtils.getCurrentUser();
         return Result.success(res);
     }
 

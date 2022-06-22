@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocean.platformspringboot.mapper.RewardExchangeMapper">
+    <insert id="save">
+        insert into reward_exchange (user_id,reward_id,reward_num,ingest_time)
+        VALUES(#{userID},#{rewardId},#{exchangeNum},#{time})
+    </insert>
+    <update id="updateStatus">
+            update reward_exchange set status = 1 where reward_exchange.reward_id =#{id}
+    </update>
+
+    <select id="findRecordByUser" resultType="com.ocean.platformspringboot.entity.RewardExchange">
+            select reward_exchange.*,user.user_name as userName,reward.reward_name as rewardName,reward.reward_point as rewardPoint
+            from reward,reward_exchange,user
+            where reward_exchange.user_id = user.user_id
+            and reward_exchange.reward_id = reward.reward_id
+            and reward_exchange.user_id = #{userId}
+    </select>
+    <select id="findRecord" resultType="com.ocean.platformspringboot.entity.RewardExchange">
+        select reward_exchange.*,user.user_name as userName,reward.reward_name as rewardName,reward.reward_point as rewardPoint
+        from reward,reward_exchange,user
+        where reward_exchange.user_id = user.user_id
+        and reward_exchange.reward_id = reward.reward_id
+    </select>
+</mapper>

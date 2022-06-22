@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocean.platformspringboot.mapper.SchoolInfoMapper">
+
+    <select id="findpage" resultType="com.ocean.platformspringboot.entity.SchoolInfo">
+        select school_info.info_id as infoId,school_info.info_title as infoTitle,school_info.info_description as infoDescription,school_info.info_status as infoStatus,school_info.released_time as releasedTime,user.user_name as releasedName
+        from school_info left join user on school_info.released_by = user.user_id
+        <where>
+            <if test="infoTitle != null and infoTitle != '' ">
+                and info_title like concat('%' , #{infoTitle} , '%')
+            </if>
+        </where>
+        order by school_info.info_id desc
+    </select>
+    <select id="findpageCommon" resultType="com.ocean.platformspringboot.entity.SchoolInfo">
+        select school_info.info_id as infoId,school_info.info_title as infoTitle,school_info.info_description as infoDescription,school_info.released_time as releasedTime,user.user_name as releasedName
+        from school_info left join user on school_info.released_by = user.user_id
+        <where>
+            school_info.info_status = 1
+            <if test="infoTitle != null and infoTitle != '' ">
+                and info_title like concat('%' , #{infoTitle} , '%')
+            </if>
+        </where>
+    </select>
+    <select id="selectALL" resultType="com.ocean.platformspringboot.entity.SchoolInfo">
+        select school_info.info_id as infoId,school_info.info_title as infoTitle,school_info.info_description as infoDescription,school_info.released_time as releasedTime,user.user_name as releasedName,user.avatar as avatar
+        from school_info left join user on school_info.released_by = user.user_id
+        <where>
+            school_info.info_status = 1
+            <if test="infoTitle != null and infoTitle != '' ">
+                and info_title like concat('%' , #{infoTitle} , '%')
+            </if>
+        </where>
+    </select>
+</mapper>

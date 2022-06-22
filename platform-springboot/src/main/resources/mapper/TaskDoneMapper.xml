@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocean.platformspringboot.mapper.TaskDoneMapper">
+
+    <select id="selectNoPointCount" resultType="java.lang.Integer">
+        select COUNT(task_done.task_id) from task_done
+        left join task on task_done.task_id = task.task_id
+        where task_done.user_id = #{userId} and task.task_points = 0
+    </select>
+    <select id="selectCountByUser" resultType="java.lang.Integer">
+        select COUNT(task_done.task_id) from task_done
+        left join task on task_done.task_id = task.task_id
+        where task_done.user_id = #{userId}
+    </select>
+</mapper>

@@ -14,9 +14,11 @@
         <result property="point" column="user_point"/>
         <result property="level" column="user_level"/>
         <result property="credit" column="user_credit"/>
+        <result property="avatar" column="avatar"/>
+        <result property="createdTime" column="created_time"/>
     </resultMap>
     <select id="queryUserList" resultMap="UserMap">
-        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level,user_credit from user where logoff_status = 0
+        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level,user_credit,created_time from user where logoff_status = 0
     </select>
 
     <select id="queryUserByID" resultMap="UserMap">
@@ -24,7 +26,11 @@
     </select>
 
     <select id="queryUserByName" resultMap="UserMap">
-        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level,user_credit  from user where logoff_status = 0 and user_name=#{name}
+        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level,user_credit,avatar  from user where logoff_status = 0 and user_name=#{name}
+    </select>
+
+    <select id="selectIdByName" resultType="java.lang.Integer">
+        select user_id from user where logoff_status = 0 and user_name=#{name}
     </select>
 
     <insert id="addUser">
@@ -49,6 +55,9 @@
             <if test="num != null">
                 user_num=#{num},
             </if>
+            <if test="avatar != null">
+                avatar=#{avatar},
+            </if>
         </set>
         <where>
             user_id=#{id}
@@ -58,8 +67,21 @@
     <update id="delUserByID">
         update user set  logoff_status = 1 where user_id = #{id}
     </update>
+
     <update id="updateUserPoint">
-        update user set user_point = #{point} where user_id = #{id}
+        update user set user_point = #{point} where user_id = #{userId}
+    </update>
+    <update id="updateUserLevel">
+        update user set user_level = #{level} where user_id = #{userId}
+    </update>
+    <update id="updatePassword">
+        update user set user_pwd = #{newPassword} where user_name = #{name} and user_pwd = #{pwd}
+    </update>
+    <update id="updateUserCredit">
+        update user set user_credit = #{newCredit} where user_id = #{userId}
+    </update>
+    <update id="updateUserBlock">
+        update user set block_status = #{status} where user_id = #{userId}
     </update>
 
     <select id="selectPage" resultMap="UserMap">
@@ -70,8 +92,10 @@
         select count(user_id) from user where logoff_status = 0
     </select>
 
-    <select id="selectPageByName" resultMap="UserMap">
-        select user_id,user_name,user_gen,user_pwd,user_phone,user_addr,user_num,user_point,user_level,user_credit  from user where logoff_status = 0 and user_name like concat('%',#{name},'%') limit #{pageNum} ,#{pageSize}
+    <select id="selectPageByName" resultType="com.ocean.platformspringboot.entity.User">
+        select user.user_id as id,user_name as name,user_gen as gen,user_pwd as pwd,user_phone as phone,user_addr as addr,user_num as num,user_point as point,user_level as level,user_credit as credit,user_role.role_id as roleId
+        from user left join user_role on user.user_id = user_role.user_id
+        where logoff_status = 0 and user_name like concat('%',#{name},'%') limit #{pageNum} ,#{pageSize}
     </select>
 
     <select id="selectTotalByName" resultType="java.lang.Integer">
@@ -86,9 +110,14 @@
         <result property="phone" column="user_phone"/>
         <result property="addr" column="user_addr"/>
         <result property="num" column="user_num"/>
+        <result property="avatar" column="avatar"/>
     </resultMap>
     <select id="loginByName" resultMap="UserDTOMap">
-        select user_name,user_pwd,user_id from user where logoff_status = 0 and user_name = #{name} and user_pwd = #{pwd}
+        select user.user_id,user.user_name,user.user_pwd,user.avatar,user.block_status from user
+        where logoff_status = 0 and user_name = #{name} and user_pwd = #{pwd}
+    </select>
+    <select id="selectUserStatus" resultType="java.lang.Integer">
+        select user.block_status from user where user_id = #{userId}
     </select>
 
 

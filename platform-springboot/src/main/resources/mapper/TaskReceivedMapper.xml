@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocean.platformspringboot.mapper.TaskReceivedMapper">
+
+    <insert id="save">
+        insert into task_received(user_id,task_id,task_received_time) values(#{userId},#{taskId},#{dateTime})
+    </insert>
+    <select id="findUserByTask" resultType="java.lang.Integer">
+        select user_id from task_received where task_id = #{taskId}
+    </select>
+    <select id="selectCountByUser" resultType="java.lang.Integer">
+        select COUNT(task_received.task_id) from task_received
+        left join task on task_received.task_id = task.task_id
+        where task_received.user_id = #{userId}
+    </select>
+</mapper>
